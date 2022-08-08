@@ -16,21 +16,14 @@ jobs:
         mkdir /Downloadfile && cd /Downloadfile
         Project=XayahSuSuSu/Android-DataBackup
         tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-        curl -O https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk
+        curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o DataBAckup${tag}.apk
 
 
-    - name: Organize files
-      id: organize
-      run: |
-        echo "FILE=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
-        
     - name: Generate release tag
       id: tag
       run: |
         echo "::set-output name=release_tag::file_transfer_v$(date +"%m.%d-%H%M")"
         touch release.txt
-        echo "There is nothing..." >> release.txt
         echo "::set-output name=status::success"
 
     - name: Upload file to release
