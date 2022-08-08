@@ -9,11 +9,13 @@ jobs:
 
     steps: 
     - name: |
+        mkdir Downloadfile && cd Downloadfile
         Project=XayahSuSuSu/Android-DataBackup
         tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-        curl -O https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk
+        curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o DataBAckup${tag}.apk
       run: |
-        mkdir /Downloadfile && cd /Downloadfile
+        mkdir Downloadfile && cd Downloadfile
+        path_pwd=$(path)
         Project=XayahSuSuSu/Android-DataBackup
         tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
         curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o DataBAckup${tag}.apk
@@ -33,7 +35,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
-        files: /Downloadfile/*
+        files: $path_pwd
         
         
     - name: Remove old Releases
