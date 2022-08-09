@@ -8,10 +8,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps: 
-    - name: wget：XayahSuSuSu/Android-DataBackup
+    - name: wget XayahSuSuSu/Android-DataBackup
+      id: down
       run: |
         cd /home/runner/work/auto-down/auto-down/
-        Project=$(echo ${{ env.GITHUB_ACTION }}|cut -d '：' -f 2)
+        Project=${{ env.GITHUB_ACTION }
         tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
         wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download
 
