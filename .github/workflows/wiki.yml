@@ -1,0 +1,50 @@
+name: Download File
+
+on:
+  gollum
+jobs:
+  downloading:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.0
+    - uses: actions/setup-node@v2.1.1
+      with: 
+        node-version: v14.3.0
+    - name: Prepare your file
+      run: |
+        mkdir download
+        git clone "https://github.com/${GITHUB_REPOSITORY}.wiki.git"
+        wiki=`echo $echo $GITHUB_REPOSITORY | cut -d "/" -f 2`.wiki
+        cd "$wiki"
+        drive=`git log --pretty=format: -1 --name-only *.md`
+        export drive
+        cd ..
+        wget `cat $wiki/$drive | xargs` --directory-prefix=download
+        npm i
+        npm start
+
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "FILE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=release_tag::file_transfer_v$(date +"%m.%d-%H%M")"
+        touch release.txt
+        echo "::set-output name=status::success"
+
+    - name: Upload file to release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: ${{ env.FILE }}/download/*
+
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
