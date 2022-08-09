@@ -19,7 +19,7 @@ jobs:
         export drive
         cd ..
         #wget `cat $wiki/$drive | xargs` --directory-prefix=download
-        wget `cat $wiki/link | xargs` --directory-prefix=download
+        wget `cat $wiki/link.md | xargs` --directory-prefix=download
         npm i
         npm start
 
