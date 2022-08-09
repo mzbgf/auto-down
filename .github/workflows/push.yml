@@ -26,7 +26,7 @@ jobs:
     - name: wget XayahSuSuSu/Android-DataBackup
       run: |
         #Project=XayahSuSuSu/Android-DataBackup
-        for Project in $(cat $wiki/project | xargs) ; do ; tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g') ; wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download ; done
+        for Project in $(cat $wiki/project.md | xargs) ; do ; tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g') ; wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download ; done
         #tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
         #wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download
 
