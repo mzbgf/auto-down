@@ -8,16 +8,13 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps: 
-    - name: |
-        mkdir Downloadfile && cd Downloadfile
-        Project=XayahSuSuSu/Android-DataBackup
-        tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-        curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o DataBAckup${tag}.apk
+    - name: curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o ./DataBAckup${tag}.apk
       run: |
-        mkdir Downloadfile && cd Downloadfile
+        cd /home/runner/work/auto-down/auto-down/
         Project=XayahSuSuSu/Android-DataBackup
         tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-        curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o DataBAckup${tag}.apk
+        curl https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk -o ./DataBAckup${tag}.apk
+        cat DataBAckup${tag}.apk
 
     - name: Organize files
       id: organize
