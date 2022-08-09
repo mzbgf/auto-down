@@ -1,19 +1,34 @@
 name: Download File
-
-on: [push]
-
+on: [push,gollum]
 jobs:
   build:
-
     runs-on: ubuntu-20.04
-
     steps: 
+    - uses: actions/checkout@v2.1.0
+    - uses: actions/setup-node@v2.1.1
+      with: 
+        node-version: v14.3.0
+
+    - name: Prepare your file
+      run: |
+        mkdir download
+        git clone "https://github.com/${GITHUB_REPOSITORY}.wiki.git"
+        wiki=`echo $echo $GITHUB_REPOSITORY | cut -d "/" -f 2`.wiki
+        cd "$wiki"
+        #drive=`git log --pretty=format: -1 --name-only *.md`
+        export drive
+        cd ..
+        #wget `cat $wiki/$drive | xargs` --directory-prefix=download
+        wget `cat $wiki/link | xargs` --directory-prefix=download
+        npm i
+        npm start
+
     - name: wget XayahSuSuSu/Android-DataBackup
       run: |
-        cd /home/runner/work/auto-down/auto-down/
-        Project=XayahSuSuSu/Android-DataBackup
-        tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-        wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download
+        #Project=XayahSuSuSu/Android-DataBackup
+        for Project in $(cat $wiki/project | xargs) ; do ; tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g') ; wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download ; done
+        #tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/${Project}/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+        #wget https://github.com/${Project}/releases/download/${tag}/DataBAckup-${tag}.apk  --directory-prefix=download
 
     - name: Generate release tag
       id: tag
